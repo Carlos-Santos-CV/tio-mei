@@ -28,7 +28,7 @@ def load_data(json_path: str) -> dict:
     dists = data["distances"]
     n = len(islands)
 
-    if len(dists) != n or any(len(row) != n for row in dists):
+    if len(dists) != n or any(len(row) != n for row in dists): # check for n x n matrix, avoid typos
         sys.exit("The distance matrix must be square and compatible with the list of islands.")
 
     # Determine the starting island (depot)
@@ -59,12 +59,21 @@ def solve_tsp_mtz(data: dict) -> Tuple[List[int], float]:
     prob = pulp.LpProblem("TSP_CVNet", pulp.LpMinimize)
 
     # Binary variables x[i,j]
-    x = pulp.LpVariable.dicts("x", ((i, j) for i in range(n) for j in range(n) if i != j),
-                              cat='Binary')
+    # Dont need to create all variables, nice!
+    x = pulp.LpVariable.dicts(
+        "x", 
+        ((i, j) for i in range(n) for j in range(n) if i != j), 
+        cat='Binary'
+    )
 
     # Auxiliary variables u[i] (visit order)
-    u = pulp.LpVariable.dicts("u", (i for i in range(n)),
-                              lowBound=0, upBound=n-1, cat='Continuous')
+    u = pulp.LpVariable.dicts(
+        "u", 
+        (i for i in range(n)), 
+        lowBound=0, 
+        upBound=n-1, 
+        cat='Continuous'
+    )
 
     # Objective function: minimize total distance
     prob += pulp.lpSum(dists[i][j] * x[i, j] for i in range(n) for j in range(n) if i != j)
@@ -76,7 +85,7 @@ def solve_tsp_mtz(data: dict) -> Tuple[List[int], float]:
 
     # MTZ constraints for subtour elimination
     for i in range(n):
-        for j in range(1, n):  # avoid redundant constraint for j=0 (depot)
+        for j in range(n):
             if i != j and i != depot and j != depot:
                 prob += u[i] - u[j] + n * x[i, j] <= n - 1
     # (The depot node can interact freely; the constraint above already covers pairs without depot)
