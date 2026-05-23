@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro - TSP CVNet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #f5576c;
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+
+        .error-message {
+            background: #fee;
+            border-left: 4px solid #f5576c;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #333;
+            text-align: left;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+
+        .error-message code {
+            color: #f5576c;
+            font-weight: bold;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-icon">⚠️</div>
+        <h1>Erro ao Processar</h1>
+        <p>Ocorreu um erro ao resolver o TSP:</p>
+        <div class="error-message">
+            <code>{{ error }}</code>
+        </div>
+        <p style="color: #666; margin-top: 20px;">Verifique o ficheiro <code>input_data.json</code> e tente novamente.</p>
+        <button onclick="location.reload()">Tentar Novamente</button>
+    </div>
+</body>
+</html>
