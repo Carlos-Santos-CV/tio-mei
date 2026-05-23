@@ -165,6 +165,28 @@ for i in range(n):
 O código actua como um arquitecto e um construtor. O Python (arquitecto) desenha o projecto usando a técnica **MTZ**, que funciona como dar uma "senha de entrada" a cada ilha; para avançarmos na rota, a senha da ilha seguinte tem de ser maior que a anterior, o que impede que o computador se perca em pequenos circuitos isolados. Quando o projecto está pronto, o solucionador (construtor) utiliza o **Branch-and-Cut** para testar milhares de combinações de "interruptores" binários (ligar ou desligar uma estrada entre ilhas). Ele descarta rapidamente as opções impossíveis e garante que, no final, a CVNet tenha a rota de sincronização mais curta e eficiente do ponto de vista matemático.
 ## 5. Resultados para CVNet<a id="resultados"></a>
 
+Nesta secção, detalhamos a solução óptima encontrada para o problema de encaminhamento da CVNet. Utilizando a formulação de Programação Linear Inteira discutida anteriormente, o solucionador identificou a rota Hamiltoniana que minimiza o custo total de sincronização entre os data centers das 10 ilhas.
+
+### 5.1. A Rota Óptima e o Custo Mínimo
+
+Os resultados obtidos através da execução do código `tsp_cvnet.py` demonstram a eficácia dos métodos exatos para instâncias de dimensão controlada ($n=10$). 
+
+**Os indicadores principais da solução são:**
+* **Distância Total Percorrida:** 921.00 unidades.
+* **Sequência de Sincronização:** 
+    **Santiago $\rightarrow$ Maio $\rightarrow$ Boa Vista $\rightarrow$ Sal $\rightarrow$ São Nicolau $\rightarrow$ Santo Antão $\rightarrow$ São Vicente $\rightarrow$ Santa Luzia $\rightarrow$ Brava $\rightarrow$ Fogo $\rightarrow$ Santiago**.
+
+Esta sequência constitui um **ciclo Hamiltoniano**, garantindo que cada ilha é visitada exatamente uma única vez antes de o fluxo de dados regressar ao ponto de origem para fechar o ciclo de actualização da rede.
+
+### 5.2. Interpretação Geográfica e Operacional
+
+A análise da rota revela que o modelo matemático priorizou o agrupamento de ilhas por proximidade geográfica, uma característica típica de soluções óptimas em problemas de optimização combinatória.
+
+1. **Eficiência de Roteamento:** O percurso segue uma lógica de "vizinhança", minimizando os saltos de longa distância que elevariam a latência e o custo de comunicação.
+2. **Invariância do Ciclo:** Conforme validado tecnicamente, o custo total de 921.00 unidades é uma propriedade do ciclo. Isto significa que a CVNet pode iniciar a sincronização em qualquer uma das ilhas (por exemplo, começar em São Vicente em vez de Santiago) e, desde que mantenha esta sequência circular, o custo total permanecerá inalterado.
+3. **Garantia de Otimalidade:** Ao contrário de uma solução obtida por métodos heurísticos, que poderia fornecer apenas uma "boa rota", este resultado de 921.00 unidades é matematicamente provado como o menor possível, não existindo qualquer outra combinação entre as 181.440 rotas viáveis que seja superior em termos de custo.
+
+
 ## 6. Conclusões<a id="conclusões"></a>
 
 ## 7. Referências Bibliográficas<a id="referencias"></a>
