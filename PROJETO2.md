@@ -185,8 +185,12 @@ A análise da rota revela que o modelo matemático priorizou o agrupamento de il
 1. **Eficiência de Roteamento:** O percurso segue uma lógica de "vizinhança", minimizando os saltos de longa distância que elevariam a latência e o custo de comunicação.
 2. **Invariância do Ciclo:** Conforme validado tecnicamente, o custo total de 921.00 unidades é uma propriedade do ciclo. Isto significa que a CVNet pode iniciar a sincronização em qualquer uma das ilhas (por exemplo, começar em São Vicente em vez de Santiago) e, desde que mantenha esta sequência circular, o custo total permanecerá inalterado.
 3. **Garantia de Otimalidade:** Ao contrário de uma solução obtida por métodos heurísticos, que poderia fornecer apenas uma "boa rota", este resultado de 921.00 unidades é matematicamente provado como o menor possível, não existindo qualquer outra combinação entre as 181.440 rotas viáveis que seja superior em termos de custo.
-
-
 ## 6. Conclusões<a id="conclusões"></a>
+
+O presente trabalho permitiu abordar de forma exaustiva o desafio de optimização de rotas na rede de alta velocidade da **Agência Nacional de Redes de Cabo Verde (CVNet)** para o cenário de 2040. Através da aplicação de modelos matemáticos de Investigação Operacional, transformámos uma necessidade logística numa solução de infra-estrutura de custo mínimo.
+
+A principal contribuição deste estudo foi a identificação da **rota Hamiltoniana óptima** para a sincronização dos 10 data centers distribuídos pelas ilhas. A utilização de um modelo de Programação Linear Inteira Mista (MIP), especificamente a formulação de **Miller-Tucker-Zemlin (MTZ)**, garantiu que a solução encontrada de **921.00 unidades** não fosse apenas "viável", mas matematicamente comprovada como o mínimo global (Gutin & Punnen, 2002, p. 20; Hillier & Lieberman, 2006, p. 504).
+
+O projeto validou que, apesar de o Problema do Caixeiro Viajante (TSP) pertencer à classe de complexidade **NP-difícil**, a dimensão actual da rede CVNet ($n=10$) permite a obtenção de soluções exactas em tempo computacional desprezável utilizando o algoritmo _Branch-and-Cut_ (Hillier & Lieberman, 2006, p. 604). 
 
 ## 7. Referências Bibliográficas<a id="referencias"></a>
