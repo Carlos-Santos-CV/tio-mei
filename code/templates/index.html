@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSP CVNet - Otimização de Roteamento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .result-card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .distance-box {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .distance-box .label {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .distance-box .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .distance-box .unit {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .route-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #eee;
+        }
+
+        .route-title {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .route-path {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            font-size: 1em;
+        }
+
+        .island {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .arrow {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #764ba2;
+        }
+
+        .info-box h3 {
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .info-box p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .distance-box .value {
+                font-size: 2em;
+            }
+
+            .route-path {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .arrow {
+                display: none;
+            }
+
+            .info-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 TSP CVNet</h1>
+            <p>Otimização de Roteamento para as Ilhas de Cabo Verde</p>
+        </div>
+
+        <div class="content">
+            <div class="result-card">
+                <h2>✓ Solução Ótima Encontrada</h2>
+                <p style="color: #666; margin-bottom: 20px;">A rota abaixo minimiza a distância total de viagem entre os {{ num_islands }} data centers.</p>
+                
+                <div class="distance-box">
+                    <div class="label">Distância Total</div>
+                    <div class="value">{{ distance }}</div>
+                    <div class="unit">unidades</div>
+                </div>
+
+                <div class="route-container">
+                    <div class="route-title">Rota Otimizada:</div>
+                    <div class="route-path">
+                        {% for island in route %}
+                            <div class="island">{{ island }}</div>
+                            {% if not loop.last %}
+                                <div class="arrow">→</div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-box">
+                    <h3>📊 Algoritmo Utilizado</h3>
+                    <p><strong>Miller-Tucker-Zemlin (MTZ)</strong><br>Formulação compacta de programação linear inteira (MILP) para resolver o Problema do Caixeiro Viajante.</p>
+                </div>
+                <div class="info-box">
+                    <h3>🔧 Solver</h3>
+                    <p><strong>CBC (Coin-or-branch and cut)</strong><br>Algoritmo Branch-and-Cut que garante a solução ótima global.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Projeto desenvolvido para fins académicos • Investigação Operacional • CVNet Cabo Verde</p>
+        </div>
+    </div>
+</body>
+</html>
